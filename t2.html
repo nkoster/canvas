@@ -6,10 +6,18 @@
     <script>
 
 function rgbHtml(data) {
-    return '#' +
-        ('0' + data[0].toString(16)).substr(-2) +
-        ('0' + data[1].toString(16)).substr(-2) +
-        ('0' + data[2].toString(16)).substr(-2)
+    var red = data[0]
+    var green = data[1]
+    var blue = data[2]
+    var t = Math.round(((red * 299) + (green * 587) + (blue * 114)) / 1000)
+    var fg = (t > 135) ? 'black' : 'white'
+    return {
+        fg: fg,
+        bg: '#' +
+        ('0' + red.toString(16)).substr(-2) +
+        ('0' + green.toString(16)).substr(-2) +
+        ('0' + blue.toString(16)).substr(-2)
+    }
 }
 
 var canvas = document.createElement('canvas')
@@ -30,8 +38,9 @@ canvas.addEventListener('mousemove', function(e) {
     }
     var iData = context.getImageData(pos.x, pos.y, 1, 1)
     var color = rgbHtml(iData.data)
-    coords.style.background = color
-    coords.innerHTML = pos.x + ',' + pos.y + ' ' + color
+    coords.style.background = color.bg
+    coords.style.color = color.fg
+    coords.innerHTML = pos.x + ',' + pos.y + ' ' + color.bg
     })
 var coords = document.createElement('div')
 coords.style.height = '200px'
