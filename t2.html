@@ -1,0 +1,48 @@
+<html>
+<body>
+    <head>
+        <title>aap</title>
+    </head>
+    <script>
+
+function rgbHtml(data) {
+    return '#' +
+        ('0' + data[0].toString(16)).substr(-2) +
+        ('0' + data[1].toString(16)).substr(-2) +
+        ('0' + data[2].toString(16)).substr(-2)
+}
+
+var canvas = document.createElement('canvas')
+var context = canvas.getContext('2d')
+var image = new Image()
+image.onload = function() {
+    canvas.width = this.width
+    canvas.height = this.height
+    context.drawImage(this, 0, 0)
+}
+image.src = '../f2.gif'
+document.body.appendChild(canvas)
+canvas.addEventListener('mousemove', function(e) {
+    var rect = canvas.getBoundingClientRect()
+    var pos = {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+    }
+    var iData = context.getImageData(pos.x, pos.y, 1, 1)
+    var color = rgbHtml(iData.data)
+    coords.style.background = color
+    coords.innerHTML = pos.x + ',' + pos.y + ' ' + color
+    })
+var coords = document.createElement('div')
+coords.style.height = '200px'
+coords.style.width = '200px'
+coords.style.color = 'white'
+coords.style.background = '#b8296c'
+coords.style.display = 'inline-block'
+coords.style.verticalAlign = 'top'
+coords.appendChild(document.createTextNode('0,0'))
+document.body.append(coords)
+
+</script>
+</body>
+</html>
