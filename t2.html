@@ -23,6 +23,7 @@ function rgbHtml(data) {
 var mainCanvas = document.createElement('canvas')
 var mainContext = mainCanvas.getContext('2d')
 mainCanvas.style.height = '200px'
+mainCanvas.style.cursor = 'crosshair' 
 var image = new Image()
 var zoomFactor
 image.onload = function() {
@@ -32,7 +33,7 @@ image.onload = function() {
     console.log(zoomFactor)
     mainContext.drawImage(this, 0, 0)
 }
-image.src = '626.jpg'
+image.src = 't4.jpg'
 document.body.appendChild(mainCanvas)
 mainCanvas.addEventListener('mousemove', function(e) {
     var rect = mainCanvas.getBoundingClientRect()
