@@ -20,27 +20,31 @@ function rgbHtml(data) {
     }
 }
 
-var canvas = document.createElement('canvas')
-var context = canvas.getContext('2d')
+var mainCanvas = document.createElement('canvas')
+var mainContext = mainCanvas.getContext('2d')
 var image = new Image()
 image.onload = function() {
-    canvas.width = this.width
-    canvas.height = this.height
-    context.drawImage(this, 0, 0)
+    mainCanvas.width = this.width
+    mainCanvas.height = this.height
+    mainContext.drawImage(this, 0, 0)
 }
-image.src = 't2.gif'
-document.body.appendChild(canvas)
-canvas.addEventListener('mousemove', function(e) {
-    var rect = canvas.getBoundingClientRect()
+image.src = '626.jpg'
+document.body.appendChild(mainCanvas)
+mainCanvas.addEventListener('mousemove', function(e) {
+    var rect = mainCanvas.getBoundingClientRect()
     var pos = {
         x: e.clientX - rect.left,
         y: e.clientY - rect.top
     }
-    var iData = context.getImageData(pos.x, pos.y, 1, 1)
+    var iData = mainContext.getImageData(pos.x, pos.y, 1, 1)
+    var iZoom = mainContext.getImageData(pos.x - 100, pos.y - 100, 200, 200)
     var color = rgbHtml(iData.data)
     coords.style.background = color.bg
     coords.style.color = color.fg
     coords.innerHTML = pos.x + ',' + pos.y + ' ' + color.bg
+    zoomCanvas.width = iZoom.width
+    zoomCanvas.height = iZoom.height
+    zoomContext.putImageData(iZoom, 0, 0)
     })
 var coords = document.createElement('div')
 coords.style.height = '200px'
@@ -52,6 +56,11 @@ coords.style.verticalAlign = 'top'
 coords.appendChild(document.createTextNode('0,0'))
 document.body.append(coords)
 
+var zoomCanvas = document.createElement('canvas')
+var zoomContext = zoomCanvas.getContext('2d')
+document.body.append(zoomCanvas)
+zoomCanvas.width = 200
+zoomCanvas.height = 200
 </script>
 </body>
 </html>
