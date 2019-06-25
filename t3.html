@@ -24,7 +24,8 @@ var mainCanvas = document.createElement('canvas')
 var mainContext = mainCanvas.getContext('2d')
 
 mainCanvas.style.height = '200px'
-mainCanvas.style.cursor = 'none' 
+mainCanvas.style.cursor = 'none'
+mainCanvas.style.border = 'solid 1px white'
 var image = new Image()
 var zoomFactor
 var mainData
@@ -38,6 +39,7 @@ image.onload = function() {
 image.src = 't4.jpg'
 document.body.appendChild(mainCanvas)
 mainCanvas.addEventListener('mousemove', function(e) {
+    mainCanvas.style.border = 'solid 1px red'
     var rect = mainCanvas.getBoundingClientRect()
     var pos = {
         x: (e.clientX - rect.left) * zoomFactor,
@@ -55,13 +57,16 @@ mainCanvas.addEventListener('mousemove', function(e) {
     zoomCanvas.height = iZoom.height
     zoomContext.putImageData(iZoom, 0, 0)
 })
-
+mainCanvas.addEventListener('mouseout', function(e) {
+    mainCanvas.style.border = 'solid 1px white'
+})
 var zoomCanvas = document.createElement('canvas')
 var zoomContext = zoomCanvas.getContext('2d')
 document.body.append(zoomCanvas)
 zoomCanvas.width = 200
 zoomCanvas.height = 200
 zoomCanvas.style.verticalAlign = 'top'
+zoomCanvas.style.border = 'solid 1px white'
 </script>
 </body>
 </html>
