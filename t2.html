@@ -22,16 +22,18 @@ function rgbHtml(data) {
 
 var mainCanvas = document.createElement('canvas')
 var mainContext = mainCanvas.getContext('2d')
+
 mainCanvas.style.height = '200px'
-mainCanvas.style.cursor = 'crosshair' 
+mainCanvas.style.cursor = 'none' 
 var image = new Image()
 var zoomFactor
+var mainData
 image.onload = function() {
     mainCanvas.width = this.width
     mainCanvas.height = this.height
     zoomFactor = this.height / 200
-    console.log(zoomFactor)
     mainContext.drawImage(this, 0, 0)
+    mainData = mainContext.getImageData(0, 0, this.width, this.height)
 }
 image.src = 't4.jpg'
 document.body.appendChild(mainCanvas)
@@ -41,8 +43,13 @@ mainCanvas.addEventListener('mousemove', function(e) {
         x: (e.clientX - rect.left) * zoomFactor,
         y: (e.clientY - rect.top) * zoomFactor
     }
+    mainContext.putImageData(mainData, 0, 0)
     var iData = mainContext.getImageData(pos.x, pos.y, 1, 1)
     var iZoom = mainContext.getImageData(pos.x - 100, pos.y - 100, 200, 200)
+    mainContext.globalCompositeOperation = 'xor'
+    mainContext.globalAlpha = 0.3
+    mainContext.fillRect(pos.x - 100, pos.y - 100, 200, 200)
+    mainContext.globalAlpha = 1.0
     var color = rgbHtml(iData.data)
     coords.style.background = color.bg
     coords.style.color = color.fg
@@ -50,7 +57,7 @@ mainCanvas.addEventListener('mousemove', function(e) {
     zoomCanvas.width = iZoom.width
     zoomCanvas.height = iZoom.height
     zoomContext.putImageData(iZoom, 0, 0)
-    })
+})
 var coords = document.createElement('div')
 coords.style.height = '200px'
 coords.style.width = '200px'
