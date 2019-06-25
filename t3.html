@@ -5,21 +5,6 @@
     </head>
     <script>
 
-function rgbHtml(data) {
-    var red = data[0]
-    var green = data[1]
-    var blue = data[2]
-    var t = Math.round(((red * 299) + (green * 587) + (blue * 114)) / 1000)
-    var fg = (t > 135) ? 'black' : 'white'
-    return {
-        fg: fg,
-        bg: '#' +
-        ('0' + red.toString(16)).substr(-2) +
-        ('0' + green.toString(16)).substr(-2) +
-        ('0' + blue.toString(16)).substr(-2)
-    }
-}
-
 var mainCanvas = document.createElement('canvas')
 var mainContext = mainCanvas.getContext('2d')
 
@@ -39,7 +24,7 @@ image.onload = function() {
 image.src = 't4.jpg'
 document.body.appendChild(mainCanvas)
 mainCanvas.addEventListener('mousemove', function(e) {
-    mainCanvas.style.border = 'solid 1px red'
+    mainCanvas.style.border = 'solid 1px #ccc'
     var rect = mainCanvas.getBoundingClientRect()
     var pos = {
         x: (e.clientX - rect.left) * zoomFactor,
@@ -52,7 +37,6 @@ mainCanvas.addEventListener('mousemove', function(e) {
     mainContext.globalAlpha = 0.3
     mainContext.fillRect(pos.x - 100, pos.y - 100, 200, 200)
     mainContext.globalAlpha = 1.0
-    var color = rgbHtml(iData.data)
     zoomCanvas.width = iZoom.width
     zoomCanvas.height = iZoom.height
     zoomContext.putImageData(iZoom, 0, 0)
