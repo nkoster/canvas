@@ -1,0 +1,67 @@
+<html>
+<body>
+    <head>
+        <title>aap</title>
+    </head>
+    <script>
+
+function rgbHtml(data) {
+    var red = data[0]
+    var green = data[1]
+    var blue = data[2]
+    var t = Math.round(((red * 299) + (green * 587) + (blue * 114)) / 1000)
+    var fg = (t > 135) ? 'black' : 'white'
+    return {
+        fg: fg,
+        bg: '#' +
+        ('0' + red.toString(16)).substr(-2) +
+        ('0' + green.toString(16)).substr(-2) +
+        ('0' + blue.toString(16)).substr(-2)
+    }
+}
+
+var mainCanvas = document.createElement('canvas')
+var mainContext = mainCanvas.getContext('2d')
+
+mainCanvas.style.height = '200px'
+mainCanvas.style.cursor = 'none' 
+var image = new Image()
+var zoomFactor
+var mainData
+image.onload = function() {
+    mainCanvas.width = this.width
+    mainCanvas.height = this.height
+    zoomFactor = this.height / 200
+    mainContext.drawImage(this, 0, 0)
+    mainData = mainContext.getImageData(0, 0, this.width, this.height)
+}
+image.src = 't4.jpg'
+document.body.appendChild(mainCanvas)
+mainCanvas.addEventListener('mousemove', function(e) {
+    var rect = mainCanvas.getBoundingClientRect()
+    var pos = {
+        x: (e.clientX - rect.left) * zoomFactor,
+        y: (e.clientY - rect.top) * zoomFactor
+    }
+    mainContext.putImageData(mainData, 0, 0)
+    var iData = mainContext.getImageData(pos.x, pos.y, 1, 1)
+    var iZoom = mainContext.getImageData(pos.x - 100, pos.y - 100, 200, 200)
+    mainContext.globalCompositeOperation = 'xor'
+    mainContext.globalAlpha = 0.3
+    mainContext.fillRect(pos.x - 100, pos.y - 100, 200, 200)
+    mainContext.globalAlpha = 1.0
+    var color = rgbHtml(iData.data)
+    zoomCanvas.width = iZoom.width
+    zoomCanvas.height = iZoom.height
+    zoomContext.putImageData(iZoom, 0, 0)
+})
+
+var zoomCanvas = document.createElement('canvas')
+var zoomContext = zoomCanvas.getContext('2d')
+document.body.append(zoomCanvas)
+zoomCanvas.width = 200
+zoomCanvas.height = 200
+zoomCanvas.style.verticalAlign = 'top'
+</script>
+</body>
+</html>
